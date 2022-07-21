@@ -17,7 +17,7 @@ resource "aws_launch_configuration" "webcluster" {
 
 resource "aws_autoscaling_group" "dev_asg" {
   launch_configuration = aws_launch_configuration.webcluster.name
-  vpc_zone_identifier = [aws_subnet.mdw_dev1.id,aws_subnet.mdw_dev2.id]
+  vpc_zone_identifier = [data.terraform_remote_state.vpc.outputs.subnet_id_mdw_dev1,data.terraform_remote_state.vpc.outputs.subnet_id_mdw_dev2]
 
   target_group_arns = [aws_lb_target_group.dev_asg_tg.arn]
   health_check_type = "ELB"
@@ -36,7 +36,7 @@ resource "aws_lb" "dev_alb" {
   name = "dev-asg-alb"
   internal = true
   load_balancer_type = "application"
-  subnets = [aws_subnet.mdw_dev1.id,aws_subnet.mdw_dev2.id]
+  subnets = [data.terraform_remote_state.vpc.outputs.subnet_id_mdw_dev1,data.terraform_remote_state.vpc.outputs.subnet_id_mdw_dev2]
   security_groups = [aws_security_group.alb.id]
 }
 

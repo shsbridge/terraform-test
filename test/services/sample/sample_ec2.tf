@@ -2,7 +2,7 @@ resource "aws_instance" "gcc-ec2-sample" {
   ami = data.aws_ami.ubuntu.id
   key_name = var.dev_key
   instance_type = "t2.micro"
-  subnet_id = aws_subnet.mdw_dev1.id
+  subnet_id = data.terraform_remote_state.vpc.outputs.subnet_id_mdw_dev1
   vpc_security_group_ids = [aws_security_group.instance.id]
 
   user_data = <<-EOF
@@ -35,4 +35,5 @@ EOF
     Name = "terraform-test"
   }
 }
+
 
